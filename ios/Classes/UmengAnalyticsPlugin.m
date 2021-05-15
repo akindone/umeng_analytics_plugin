@@ -1,4 +1,5 @@
-#import "UMMobClick/MobClick.h"
+#import <UMCommon/UMCommon.h>
+#import <UMCommon/MobClick.h>
 #import "UmengAnalyticsPlugin.h"
 
 @implementation UmengAnalyticsPlugin
@@ -25,44 +26,36 @@
 }
 
 - (void)init:(FlutterMethodCall*)call result:(FlutterResult)result {
-    UMConfigInstance.appKey = call.arguments[@"iosKey"];
-    UMConfigInstance.channelId = call.arguments[@"channel"];
-    UMConfigInstance.bCrashReportEnabled = call.arguments[@"catchUncaughtExceptions"];
-    [MobClick startWithConfigure:UMConfigInstance];
-    
-    [MobClick setLogEnabled:call.arguments[@"logEnabled"]];
-    [MobClick setEncryptEnabled:call.arguments[@"encryptEnabled"]];
-    [MobClick setLogSendInterval:[call.arguments[@"sessionContinueMillis"] doubleValue]];
-    
+    // NSString * deviceID =[UMConfigure deviceIDForIntegration];
+    // NSLog(@"集成测试的deviceID:%@", deviceID);
+    [UMConfigure initWithAppkey:call.arguments[@"iosKey"] channel:call.arguments[@"channel"]];
+    [UMConfigure setLogEnabled:call.arguments[@"logEnabled"]];
+    [UMConfigure setEncryptEnabled:call.arguments[@"encryptEnabled"]];
+    [UMConfigure setLogEnabled:[call.arguments[@"sessionContinueMillis"] doubleValue]];
+//    UMConfigInstance.bCrashReportEnabled = call.arguments[@"catchUncaughtExceptions"];
     result([NSNumber numberWithBool:YES]);
 }
 
 - (void)pageStart:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSString* viewName = call.arguments[@"viewName"];
-    
     [MobClick beginLogPageView:viewName];
-    
     result([NSNumber numberWithBool:YES]);
 }
 
 - (void)pageEnd:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSString* viewName = call.arguments[@"viewName"];
-    
     [MobClick endLogPageView:viewName];
-    
     result([NSNumber numberWithBool:YES]);
 }
 
 - (void)event:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSString* eventId = call.arguments[@"eventId"];
     NSString* label = call.arguments[@"label"];
-    
     if (label == nil) {
         [MobClick event:eventId];
     } else {
         [MobClick event:eventId label:label];
     }
-    
     result([NSNumber numberWithBool:YES]);
 }
 

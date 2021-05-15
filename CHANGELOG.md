@@ -1,3 +1,14 @@
+<!--
+ * @Author: Cao Shixin
+ * @Date: 2021-05-15 13:35:21
+ * @LastEditors: Cao Shixin
+ * @LastEditTime: 2021-05-15 16:14:42
+ * @Description: 
+-->
+# [2.0.0] 20210515
+* null safty
+* ios android 依赖更新
+
 ## [1.0.3+1] - 2021-5-11
 - Android：更新maven地址
 

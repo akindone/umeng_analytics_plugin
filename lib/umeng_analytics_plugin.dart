@@ -1,12 +1,11 @@
 import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 /// Umeng analytics plugin
 class UmengAnalyticsPlugin {
   /// Method channel
-  static const MethodChannel _channel = MethodChannel('jitao.tech/umeng_analytics_plugin');
+  static const MethodChannel _channel =
+      MethodChannel('jitao.tech/umeng_analytics_plugin');
 
   /// Initialize plugin with configurations.
   ///
@@ -17,11 +16,11 @@ class UmengAnalyticsPlugin {
   /// [encryptEnabled] turn on or off log encrypt, default for false.
   /// [sessionContinueMillis] time in milliseconds to upload analytics data.
   /// [catchUncaughtExceptions] whether to catch uncaught exceptions, default for true.
-  /// [pageCollectionMode] how to collect page data, leave it AUTO is ok, for future details, read umeng doc.
-  static Future<bool> init({
-    @required String androidKey,
-    @required String iosKey,
-    String channel,
+  /// [pageCollectionMode] use for Android how to collect page data, leave it AUTO is ok, for future details, read umeng doc.
+  static Future<bool?> init({
+    required String androidKey,
+    required String iosKey,
+    String? channel,
     bool logEnabled = false,
     bool encryptEnabled = false,
     int sessionContinueMillis = 30000,
@@ -38,38 +37,28 @@ class UmengAnalyticsPlugin {
       'catchUncaughtExceptions': catchUncaughtExceptions,
       'pageCollectionMode': pageCollectionMode,
     };
-
     return _channel.invokeMethod<bool>('init', map);
   }
 
   /// Send a page start event for [viewName]
-  static Future<bool> pageStart(String viewName) async {
+  static Future<bool?> pageStart(String viewName) async {
     Map<String, dynamic> map = {
       'viewName': viewName,
     };
-
     return _channel.invokeMethod<bool>('pageStart', map);
   }
 
   /// Send a page end event for [viewName]
-  static Future<bool> pageEnd(String viewName) async {
+  static Future<bool?> pageEnd(String viewName) async {
     Map<String, dynamic> map = {
       'viewName': viewName,
     };
-
     return _channel.invokeMethod<bool>('pageEnd', map);
   }
 
   /// Send a general event for [eventId] with a [label]
-  static Future<bool> event(String eventId, {String label= 'label'}) async {
-    Map<String, dynamic> map = {
-      'eventId': eventId,
-    };
-
-    if (label != null) {
-      map['label'] = label;
-    }
-
+  static Future<bool?> event(String eventId, {String label = 'label'}) async {
+    Map<String, dynamic> map = {'eventId': eventId, 'label': label};
     return _channel.invokeMethod<bool>('event', map);
   }
 }
