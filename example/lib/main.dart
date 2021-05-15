@@ -1,3 +1,10 @@
+/*
+ * @Author: Cao Shixin
+ * @Date: 2021-05-15 13:35:21
+ * @LastEditors: Cao Shixin
+ * @LastEditTime: 2021-05-15 15:37:10
+ * @Description: 
+ */
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -32,7 +39,7 @@ class _MyAppState extends State<MyApp> {
     }
 
     setState(() {
-      _platformVersion = result ? 'OK' : 'ERROR';
+      _platformVersion = (result ?? false) ? 'OK' : 'ERROR';
     });
   }
 
@@ -44,8 +51,34 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
+            child: Column(
+          children: [
+            Text('Running on: $_platformVersion\n'),
+            SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  UmengAnalyticsPlugin.pageStart('myStart');
+                },
+                child: Text('pageStart')),
+            ElevatedButton(
+                onPressed: () {
+                  UmengAnalyticsPlugin.pageEnd('myEnd');
+                },
+                child: Text('pageEnd')),
+            ElevatedButton(
+                onPressed: () {
+                  UmengAnalyticsPlugin.event('my123');
+                },
+                child: Text('eventId')),
+            ElevatedButton(
+                onPressed: () {
+                  UmengAnalyticsPlugin.event('my123label', label: 'label');
+                },
+                child: Text('eventIdLabel'))
+          ],
+        )),
       ),
     );
   }
