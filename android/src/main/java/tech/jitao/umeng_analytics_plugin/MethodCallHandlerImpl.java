@@ -1,9 +1,15 @@
 package tech.jitao.umeng_analytics_plugin;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
+
+import java.lang.reflect.Type;
+import java.util.Map;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -31,6 +37,9 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
                 break;
             case "event":
                 event(call, result);
+                break;
+            case "eventObject":
+                eventObject(call, result);
                 break;
             default:
                 result.notImplemented();
@@ -96,6 +105,18 @@ public class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         final String label = call.argument("label");
 
         MobclickAgent.onEvent(context, eventId, label);
+
+        result.success(true);
+    }
+
+    private void eventObject(MethodCall call, MethodChannel.Result result) {
+        final String eventId = call.argument("eventId");
+        final String json = call.argument("paramJson");
+        Type type = new TypeToken<Map<String, Object>>() {
+        }.getType();
+        Map<String, Object> map = new Gson().fromJson(json, type);
+        Log.d("customEvent","eventId="+eventId+",map="+map.toString());
+        MobclickAgent.onEventObject(context, eventId, map);
 
         result.success(true);
     }
