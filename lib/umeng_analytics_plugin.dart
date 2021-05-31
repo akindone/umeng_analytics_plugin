@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 
 /// Umeng analytics plugin
@@ -60,5 +62,15 @@ class UmengAnalyticsPlugin {
   static Future<bool?> event(String eventId, {String label = 'label'}) async {
     Map<String, dynamic> map = {'eventId': eventId, 'label': label};
     return _channel.invokeMethod<bool>('event', map);
+  }
+
+  /// Send a general event for [eventId] with a map [params]
+  static Future<bool?> eventObject(
+      String eventId, Map<String, dynamic> params) async {
+    Map<String, dynamic> map = {
+      'eventId': eventId,
+      'paramJson': jsonEncode(params)
+    };
+    return _channel.invokeMethod<bool>('eventObject', map);
   }
 }

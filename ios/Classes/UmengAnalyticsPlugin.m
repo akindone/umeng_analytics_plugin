@@ -20,6 +20,8 @@
         [self pageEnd:call result:result];
     } else if ([@"event" isEqualToString:call.method]) {
         [self event:call result:result];
+    } else if ([@"eventObject" isEqualToString:call.method]) {
+        [self eventObject:call result:result];
     } else {
         result(FlutterMethodNotImplemented);
     }
@@ -57,6 +59,21 @@
         [MobClick event:eventId label:label];
     }
     result([NSNumber numberWithBool:YES]);
+}
+
+- (void)eventObject:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSString* eventId = call.arguments[@"eventId"];
+    NSString* jsonString = call.arguments[@"paramJson"];
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+    if(err) {
+        NSLog(@"json解析失败：%@",err);
+        result([NSNumber numberWithBool:NO]);
+    } else {
+        [MobClick event:eventId attributes:dic];
+        result([NSNumber numberWithBool:YES]);
+    }
 }
 
 @end
